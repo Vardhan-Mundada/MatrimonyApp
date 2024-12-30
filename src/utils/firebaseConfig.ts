@@ -1,10 +1,13 @@
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth'; // Import the authentication module
-import { API_KEY } from 'react-native-dotenv'; // Import the API_KEY from the .env file
+// import { config } from 'dotenv';
+
+import Constants from 'expo-constants'; // Import expo-constants
+
 
 // Firebase configuration
 const firebaseConfig = {
-    apiKey: API_KEY,
+    apiKey: Constants.expoConfig?.extra?.firebaseApiKey ?? '',
     authDomain: 'matrimonyapp-41fbe.firebaseapp.com',
     projectId: 'matrimonyapp-41fbe',
     storageBucket: 'matrimonyapp-41fbe.appspot.com',
