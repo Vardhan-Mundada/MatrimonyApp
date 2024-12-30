@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import firebase from '../utils/firebaseConfig';
+import { firebase } from '../utils/firebaseConfig'; // Import firebase instance
 
 const SignupScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
@@ -10,9 +10,50 @@ const SignupScreen = ({ navigation }: any) => {
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
-      .then(() => {
-        Alert.alert('Signup Successful!');
-        navigation.navigate('Login'); // Redirect to login after successful signup
+      .then((userCredential) => {
+        const { uid } = userCredential.user; // Get the user's UID
+
+        // Create a new document for the user in Firestore
+        firebase
+          .firestore()
+          .collection('profiles')
+          .doc(uid)
+          .set({
+            fullName: '',
+            fatherName: '',
+            motherName: '',
+            status: '',
+            email,
+            mobileNumber: '',
+            altMobileNumber: '',
+            gender: '',
+            bloodGroup: '',
+            height: '',
+            complexion: '',
+            gotra: '',
+            gon: '',
+            aboutMe: '',
+            aboutDesire: '',
+            occupation: '',
+            occupationDetails: '',
+            annualIncome: '',
+            motherTongue: '',
+            highestQualification: '',
+            qualificationDetails: '',
+            address: '',
+            city: '',
+            state: '',
+            district: '',
+            pincode: '',
+          })
+          .then(() => {
+            Alert.alert('Signup Successful!');
+            navigation.navigate('Login');
+          })
+          .catch((error) => {
+            console.error('Error creating profile:', error);
+            Alert.alert('Error', 'Failed to create profile.');
+          });
       })
       .catch((error) => {
         Alert.alert('Signup Failed', error.message);
